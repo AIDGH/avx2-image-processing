@@ -15,3 +15,8 @@ void conv3x3_f32_1ch_avx2(                                        // کانول�
     int h,                                                        // ارتفاع
     const float k[3][3]                                           // کرنل
 );                                                                // پایان اعلان
+
+// Assembly kernel processes complete eight-pixel interior blocks only.
+void conv3x3_f32_1ch_avx2_asm(
+    const float* in, float* out, int w, int h, const float k[3][3]
+);
