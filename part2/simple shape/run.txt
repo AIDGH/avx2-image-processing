@@ -1,0 +1,6 @@
+gcc main.c conv_utils.c conv_avx2.S -O3 -std=c11 -Wall -Wextra -mavx2 -mfma -lm -o detect
+./detect square.ppm 0.30
+convert edges.ppm edges.png
+convert boxed.ppm boxed.png
+
+convert square.png -define ppm:format=binary -strip square.ppm

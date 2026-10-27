@@ -1,0 +1,7 @@
+gcc conv_float_rgb.c conv_utils.c conv_avx2.S -O3 -mavx2 -mfma -std=c11 -Wall -Wextra -o program
+./program input.ppm output.ppm
+convert output.ppm output.png
+
+convert photo.jpg -define ppm:format=binary -strip input.ppm
+یا
+convert photo.jpg -resize 512x512\! input.ppm

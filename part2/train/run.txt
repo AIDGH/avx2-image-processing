@@ -1,0 +1,30 @@
+wget https://storage.googleapis.com/cvdf-datasets/mnist/train-images-idx3-ubyte.gz
+wget https://storage.googleapis.com/cvdf-datasets/mnist/train-labels-idx1-ubyte.gz
+wget https://storage.googleapis.com/cvdf-datasets/mnist/t10k-images-idx3-ubyte.gz
+wget https://storage.googleapis.com/cvdf-datasets/mnist/t10k-labels-idx1-ubyte.gz
+
+gunzip *.gz
+
+compile:
+gcc main.c conv_utils.c conv_avx2.S -O3 -std=c11 -Wall -Wextra -lm -mavx2 -mfma -o mnist_lr_feat
+
+train:
+./mnist_lr_feat 15 60000 0.005 1 1
+
+faster:
+./mnist_lr_feat 5 20000 0.05 1 1
+
+./mnist_lr 5 60000 0.1 mnist_idx
+
+predict:
+./mnist_lr_feat predict model.bin my.raw 1 1
+
+source ../venv/bin/activate
+python3 png_to_raw784.py digit.png my.raw
+
+NO FEATURE AND WORKS:
+gcc main.c conv_utils.c conv_avx2.S -O3 -std=c11 -Wall -Wextra -lm -mavx2 -mfma -o mnist_lr
+./mnist_lr 10 60000 0.05 0 0
+
+python3 png_to_raw784.py digit.png my.raw
+./mnist_lr_feat predict model.bin my.raw 0 0

@@ -1,0 +1,34 @@
+# OS and editor files
+.DS_Store
+._*
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Native build outputs
+*.o
+*.so
+*.dylib
+*.a
+program
+program_avx
+detect
+mnist_lr
+mnist_lr_feat
+conv_utils_gen.s
+
+# Python environments and caches
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Downloaded datasets and generated local outputs
+mnist_idx/
+part3/data/
+*.gz
+part1/input.ppm
+part1/output.ppm
+part1/output.png
