@@ -1,30 +1,28 @@
-wget https://storage.googleapis.com/cvdf-datasets/mnist/train-images-idx3-ubyte.gz
-wget https://storage.googleapis.com/cvdf-datasets/mnist/train-labels-idx1-ubyte.gz
-wget https://storage.googleapis.com/cvdf-datasets/mnist/t10k-images-idx3-ubyte.gz
-wget https://storage.googleapis.com/cvdf-datasets/mnist/t10k-labels-idx1-ubyte.gz
+# Run from part2/train/ on Linux x86-64 with AVX2 and FMA.
+# Download the four IDX files into the directory expected by main.c.
+mkdir -p mnist_idx
+wget -P mnist_idx https://storage.googleapis.com/cvdf-datasets/mnist/train-images-idx3-ubyte.gz
+wget -P mnist_idx https://storage.googleapis.com/cvdf-datasets/mnist/train-labels-idx1-ubyte.gz
+wget -P mnist_idx https://storage.googleapis.com/cvdf-datasets/mnist/t10k-images-idx3-ubyte.gz
+wget -P mnist_idx https://storage.googleapis.com/cvdf-datasets/mnist/t10k-labels-idx1-ubyte.gz
+gunzip mnist_idx/*.gz
 
-gunzip *.gz
-
-compile:
-gcc main.c conv_utils.c conv_avx2.S -O3 -std=c11 -Wall -Wextra -lm -mavx2 -mfma -o mnist_lr_feat
-
-train:
-./mnist_lr_feat 15 60000 0.005 1 1
-
-faster:
-./mnist_lr_feat 5 20000 0.05 1 1
-
-./mnist_lr 5 60000 0.1 mnist_idx
-
-predict:
-./mnist_lr_feat predict model.bin my.raw 1 1
-
-source ../venv/bin/activate
-python3 png_to_raw784.py digit.png my.raw
-
-NO FEATURE AND WORKS:
 gcc main.c conv_utils.c conv_avx2.S -O3 -std=c11 -Wall -Wextra -lm -mavx2 -mfma -o mnist_lr
+
+# Train on raw pixels: epochs train_limit learning_rate use_features use_avx2.
+# This overwrites model.bin; the archived model also uses raw pixels.
 ./mnist_lr 10 60000 0.05 0 0
 
+# Activate the repository-root environment if you created it per README.md.
+# source ../../.venv/bin/activate
+# png_to_raw784.py requires Pillow.
 python3 png_to_raw784.py digit.png my.raw
-./mnist_lr_feat predict model.bin my.raw 0 0
+./mnist_lr predict model.bin my.raw 0 0
+
+# Alternative: train with Sobel X/Y and Laplacian features (overwrites model.bin).
+# Keep prediction flags consistent with the selected training mode.
+# ./mnist_lr 15 60000 0.005 1 1
+# ./mnist_lr predict model.bin my.raw 1 1
+
+# Faster feature-mode experiment:
+# ./mnist_lr 5 20000 0.05 1 1
