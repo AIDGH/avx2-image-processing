@@ -1,7 +1,6 @@
 #include <stdio.h>       // I/O استاندارد (برای printf و ...)
 #include <stdlib.h>      // malloc/free و aligned_alloc
 #include <string.h>      // strcmp و توابع رشته‌ای
-#include <immintrin.h>   // (فعلاً ممکنه لازم نباشه) ولی برای intrinsics/SIMD
 #include "conv_utils.h"  // هدر توابع کمکی پروژه
 
 unsigned char clamp_u8(int x) {              // محدود کردن مقدار به بازه‌ی ۰..۲۵۵ برای تبدیل به uint8
@@ -81,10 +80,9 @@ void conv3x3_f32_1ch_avx2(
 
     // tail: پیکسل‌های داخلی که در بلوک‌های 8تایی جا نشده‌اند را اسکالر حساب می‌کنیم
     for (int y = 1; y < h-1; y++) {                     // ردیف‌های داخلی
-        int x = 1;                                      // شروع از ستون 1 (داخل)
-        int last = (w - 1) - 8;                          // آخرین x که asm می‌تواند x..x+7 را کامل حساب کند
-        if (last < 1) last = 0;                          // اگر تصویر خیلی باریک بود، عملاً برداری نداریم
-        x = (last >= 1) ? (last + 8) : 1;                // اولین x بعد از محدوده‌ی پوشش داده شده توسط asm
+        // Assembly covers complete blocks of eight interior columns.
+        int interior = w > 2 ? w - 2 : 0;
+        int x = 1 + (interior / 8) * 8;
 
         for (; x < w-1; x++) {                           // تا ستون w-2 (داخل)
             float s = 0.0f;                              // جمع وزن‌دار 3x3

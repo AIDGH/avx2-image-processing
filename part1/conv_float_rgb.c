@@ -192,18 +192,18 @@ void benchmark (                                   // بنچمارک: انداز
     // Warmup AVX2
     zero_borders(Ro,w,h); zero_borders(Go,w,h); zero_borders(Bo,w,h); // مرزها قبل از warmup AVX2
     for (int i = 0; i < warmup; i++) {             // warmup برای نسخه برداری/اسمبلی
-        conv3x3_f32_1ch_avx2_asm(R, Ro, w, h, k);   // اجرای هسته‌ی اسمبلی AVX2 روی R
-        conv3x3_f32_1ch_avx2_asm(G, Go, w, h, k);   // اجرای هسته‌ی اسمبلی AVX2 روی G
-        conv3x3_f32_1ch_avx2_asm(B, Bo, w, h, k);   // اجرای هسته‌ی اسمبلی AVX2 روی B
+        conv3x3_f32_1ch_avx2(R, Ro, w, h, k);   // اجرای هسته‌ی اسمبلی AVX2 روی R
+        conv3x3_f32_1ch_avx2(G, Go, w, h, k);   // اجرای هسته‌ی اسمبلی AVX2 روی G
+        conv3x3_f32_1ch_avx2(B, Bo, w, h, k);   // اجرای هسته‌ی اسمبلی AVX2 روی B
     }
 
     // Measure AVX2
     long long t2 = now_ns();                       // زمان شروع اندازه‌گیری AVX2/ASM
     zero_borders(Ro,w,h); zero_borders(Go,w,h); zero_borders(Bo,w,h); // مرزها قبل از اندازه‌گیری
     for (int i = 0; i < iters; i++) {              // تکرار برای دقت
-        conv3x3_f32_1ch_avx2_asm(R, Ro, w, h, k);   // اجرای ASM (R)
-        conv3x3_f32_1ch_avx2_asm(G, Go, w, h, k);   // اجرای ASM (G)
-        conv3x3_f32_1ch_avx2_asm(B, Bo, w, h, k);   // اجرای ASM (B)
+        conv3x3_f32_1ch_avx2(R, Ro, w, h, k);   // اجرای ASM (R)
+        conv3x3_f32_1ch_avx2(G, Go, w, h, k);   // اجرای ASM (G)
+        conv3x3_f32_1ch_avx2(B, Bo, w, h, k);   // اجرای ASM (B)
     }
     long long t3 = now_ns();                       // زمان پایان اندازه‌گیری AVX2/ASM
     double avx_ms = (t3 - t2) / 1e6;               // تبدیل ns به ms

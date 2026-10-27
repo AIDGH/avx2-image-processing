@@ -1,0 +1,19 @@
+name: Native convolution tests
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  convolution:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare each AVX2 wrapper with scalar C
+        shell: bash
+        run: |
+          set -euo pipefail
+          for dir in part1 "part2/simple shape" part2/train part3/native; do
+            gcc -O2 -std=c11 -Wall -Wextra -Werror=implicit-function-declaration -mavx2 -mfma -fsanitize=address,undefined -fno-omit-frame-pointer tests/test_convolution.c "$dir/conv_utils.c" "$dir/conv_avx2.S" -lm -o /tmp/test-convolution
+            /tmp/test-convolution
+          done
+      - name: Build RGB benchmark
+        run: gcc -O3 -std=c11 -mavx2 -mfma part1/conv_float_rgb.c part1/conv_utils.c part1/conv_avx2.S -o /tmp/rgb-benchmark

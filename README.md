@@ -37,7 +37,7 @@ convert output.ppm output.png
 
 The program prints C and assembly timings and their ratio. Edit `k` in `conv_float_rgb.c` to select a filter; commented examples include sharpening, Gaussian blur, Sobel, and Laplacian kernels. The active kernel is a custom example.
 
-**Benchmark limitation:** this example calls the assembly kernel directly, which only writes complete eight-pixel blocks in the interior. It does not compute the remaining interior columns. Treat the timings and saved output as an educational demonstration, not as a validated full-image performance comparison.
+The benchmark uses the AVX2 wrapper: assembly handles complete eight-pixel blocks and C computes the remaining interior columns. Both paths process the complete interior; image borders are zeroed by the caller. Timings are measured locally, and no fixed speedup is claimed.
 
 ## Part 2: simple shapes
 
@@ -116,7 +116,7 @@ gcc -O3 -std=c11 -mavx2 -mfma -fPIC -shared conv_utils.c conv_avx2.S -o libconv.
 
 ## Archive limitations
 
-The source is preserved as a course submission, including its original `run.txt` notes. Convolution boundary/remainder handling needs correctness checks before using the AVX2 path as a general-purpose image filter. Existing model files and images are archived examples; benchmark speedups and model accuracy have not been reproduced as part of preparing this repository.
+The source is preserved as a course submission, including its original `run.txt` notes. Convolution functions leave borders unchanged; callers must initialize them. The automated regression checks compare all four AVX2 wrappers against scalar C over widths 1–42, heights 1–8, and three kernels, covering every eight-pixel remainder and narrow images. Existing model files and images are archived examples; benchmark speedups and model accuracy have not been reproduced as part of preparing this repository.
 
 ## Preparation checks
 
