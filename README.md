@@ -14,7 +14,7 @@ The native convolution kernel processes eight single-precision values at a time 
 | `part3/native/` | Native convolution sources and a saved MRI CNN checkpoint |
 | `part3/py/` | PyTorch CNN training/inference and an independent NumPy/ctypes convolution wrapper |
 
-Original source files, Persian comments, sample images, example outputs, and saved models are preserved. Compiled programs, object files, shared libraries, editor files, and Python caches are excluded.
+The repository includes the course source, Persian comments, sample images, example outputs, and saved models, with targeted correctness fixes and updated run instructions. Compiled programs, object files, shared libraries, editor files, and Python caches are excluded.
 
 ## Requirements
 
@@ -66,7 +66,7 @@ t10k-images-idx3-ubyte
 t10k-labels-idx1-ubyte
 ```
 
-The original download commands are in `part2/train/run.txt`; ensure the files end up in `mnist_idx/`.
+Download commands that place the files in `mnist_idx/` are in `part2/train/run.txt`.
 
 ```sh
 cd part2/train
@@ -116,8 +116,8 @@ gcc -O3 -std=c11 -mavx2 -mfma -fPIC -shared conv_utils.c conv_avx2.S -o libconv.
 
 ## Archive limitations
 
-The source is preserved as a course submission, including its original `run.txt` notes. Convolution functions leave borders unchanged; callers must initialize them. The automated regression checks compare all four AVX2 wrappers against scalar C over widths 1–42, heights 1–8, and three kernels, covering every eight-pixel remainder and narrow images. Existing model files and images are archived examples; benchmark speedups and model accuracy have not been reproduced as part of preparing this repository.
+The repository began as a course submission. The `run.txt` notes have been updated to match the current command-line interfaces. Convolution functions leave borders unchanged; callers must initialize them. The automated regression checks compare all four AVX2 wrappers against scalar C over widths 1–42, heights 1–8, and three kernels, covering every eight-pixel remainder and narrow images. Existing model files and images are archived examples; benchmark speedups and model accuracy have not been reproduced as part of preparing this repository.
 
 ## Preparation checks
 
-Python source syntax was checked, and the standalone shape detector was compiled and run on the bundled `square.ppm` sample on macOS ARM. This confirms that the detector runs, not the accuracy of every shape label. The Linux AVX2 binaries and MRI training/inference were not executed during repository preparation.
+Python source syntax was checked, and the standalone shape detector was compiled and run on the bundled `square.ppm` sample on macOS ARM. This confirms that the detector runs, not the accuracy of every shape label. GitHub Actions runs the actual AVX2 assembly and all four wrappers against scalar C on Linux, with address/undefined-behavior sanitizers, and builds the RGB benchmark. MRI training/inference has not been reproduced.

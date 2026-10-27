@@ -1,6 +1,9 @@
+# Run from "part2/simple shape/" on Linux x86-64 with AVX2 and FMA.
 gcc main.c conv_utils.c conv_avx2.S -O3 -std=c11 -Wall -Wextra -mavx2 -mfma -lm -o detect
-./detect square.ppm 0.30
+convert square.png -depth 8 -define ppm:format=binary -strip square.ppm
+./detect square.ppm 128
 convert edges.ppm edges.png
 convert boxed.ppm boxed.png
 
-convert square.png -define ppm:format=binary -strip square.ppm
+# The optional bin_thr is an integer from 1 to 254 (default: 128), not 0.30.
+# edges.ppm and boxed.ppm are written to the current working directory.
